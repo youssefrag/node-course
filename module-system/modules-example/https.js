@@ -1,8 +1,8 @@
-const request = require("./request");
-const read = require("./response");
+const { send } = require("./request");
+const { read } = require("./response");
 
 function makeRequest(url, data) {
-  request.send(url, data);
+  send(url, data);
   return read();
 }
 
