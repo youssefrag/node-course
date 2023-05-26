@@ -1,5 +1,6 @@
-import { send } from "./request.mjs";
-import { read } from "./response.mjs";
+const { send } = require("./request");
+const { read } = require("./response");
+const { REQUEST_TIMEOUT } = require("./request");
 
 function makeRequest(url, data) {
   send(url, data);
@@ -8,3 +9,5 @@ function makeRequest(url, data) {
 
 const responseData = makeRequest("https://google.com", "hello");
 console.log(responseData);
+
+console.log(require.cache);
