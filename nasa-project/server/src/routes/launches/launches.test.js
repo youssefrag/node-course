@@ -24,6 +24,13 @@ describe("Test POST /launches", () => {
     target: "Kepler-186 f",
   };
 
+  const launchDataWithInvalidDara = {
+    mission: "USS Enterprise",
+    rocket: "NCC 1701-D",
+    target: "Kepler-186 f",
+    launchDate: "zoot",
+  };
+
   test("It should respond with 201 created", async () => {
     const response = await request(app)
       .post("/launches")
@@ -39,26 +46,24 @@ describe("Test POST /launches", () => {
   });
 
   test("It should catch missing required properties", async () => {
-    // const response = await request(app)
-    //   .post("/launches")
-    //   .send({
-    //     mission: "USS Enterprise",
-    //     rocket: "NCC 1701-D",
-    //     launchDate: "January 4, 2028",
-    //   })
-    //   .expect("Content-Type", /json/)
-    //   .expect(400);
+    const response = await request(app)
+      .post("/launches")
+      .send(launchDataWithoutDate)
+      .expect("Content-Type", /json/)
+      .expect(400);
+
+    expect(response.body).toStrictEqual({
+      error: "Missing required launch property",
+    });
   });
+
   test("It should catch invalid dates", async () => {
-    // const response = await request(app)
-    //   .post("/launches")
-    //   .send({
-    //     mission: "USS Enterprise",
-    //     rocket: "NCC 1701-D",
-    //     target: "Kepler-186 f",
-    //     launchDate: "hello",
-    //   })
-    //   .expect("Content-Type", /json/)
-    //   .expect(400);
+    const response = await request(app)
+      .post("/launches")
+      .send(launchDataWithInvalidDara)
+      .expect("Content-Type", /json/)
+      .expect(400);
+
+    expect(response.body).toStrictEqual({ error: "Invalid launch date" });
   });
 });
