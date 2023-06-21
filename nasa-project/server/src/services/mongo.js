@@ -12,7 +12,11 @@ mongoose.connection.on("error", (err) => {
 });
 
 async function mongoConnect() {
-  mongoose.connect(MONGO_URL);
+  await mongoose.connect(MONGO_URL);
 }
 
-module.exports = { mongoConnect };
+async function mongoDisconnect() {
+  await mongoose.disconnect();
+}
+
+module.exports = { mongoConnect, mongoDisconnect };
