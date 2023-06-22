@@ -20,7 +20,7 @@ saveLaunch(launch);
 
 const SPACEX_API_URL = "https://api.spacexdata.com/v4/launches/query";
 
-async function loadLaunchesData() {
+async function loadLaunchData() {
   console.log("Downloading launch data...");
   const response = await axios.post(SPACEX_API_URL, {
     query: {},
@@ -43,29 +43,13 @@ async function loadLaunchesData() {
   });
 
   const launchDocs = response.data.docs;
-  let examplePayload = [
-    {
-      customers: ["NASA (CRS)", "ZTM"],
-      id: "5eb0e4bab6c3bb0006eeb1eb",
-    },
-    {
-      customers: ["Orbcomm", "AGORA"],
-      id: "5eb0e4bab6c3bb0006eeb1ec",
-    },
-  ];
-
-  function getCustomersFromPayLoads(payloads) {
-    let allCustomers = [];
-    for (let payload of payloads) {
-      // console.log(payload.customers);
-      for (let customer of payload.customers) {
-        allCustomers.push(customer);
-      }
-    }
-    return allCustomers;
-  }
 
   for (const launchDoc of launchDocs) {
+    const payloads = launchDoc["payloads"];
+    const customers = payloads.flatMap((payload) => {
+      return payload["customers"];
+    });
+
     const launch = {
       flightNumber: launchDoc["flight_number"],
       mission: launchDoc["name"],
@@ -73,7 +57,7 @@ async function loadLaunchesData() {
       launchDate: launchDoc["date_local"],
       upcoming: launchDoc["upcoming"],
       success: launchDoc["success"],
-      customers: getCustomersFromPayLoads(launchDoc["payloads"]),
+      customers,
     };
 
     console.log(launch);
@@ -137,7 +121,7 @@ async function abortLaunchById(launchId) {
 }
 
 module.exports = {
-  loadLaunchesData,
+  loadLaunchData,
   existsLaunchWithId,
   getAllLaunches,
   scheduleNewLaunch,
