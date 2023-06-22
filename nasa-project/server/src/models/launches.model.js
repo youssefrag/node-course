@@ -25,6 +25,7 @@ async function loadLaunchData() {
   const response = await axios.post(SPACEX_API_URL, {
     query: {},
     options: {
+      pagination: false,
       populate: [
         {
           path: "rocket",
@@ -60,7 +61,7 @@ async function loadLaunchData() {
       customers,
     };
 
-    console.log(launch);
+    console.log(launch.mission);
   }
 }
 
