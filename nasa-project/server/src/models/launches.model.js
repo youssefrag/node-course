@@ -94,7 +94,7 @@ async function existsLaunchWithId(launchId) {
 }
 
 async function getAllLaunches() {
-  return await launchesDatabase.find({}, { _id: 0, __v: 0 });
+  return await launchesDatabase.find({}, { _id: 0, __v: 0 }).skip(20).limit(50);
 }
 
 async function getLatestFlightNumber() {
