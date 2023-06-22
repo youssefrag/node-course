@@ -11,7 +11,7 @@ const launch = {
   rocket: "Explorer IS1", //rocket.name
   launchDate: new Date("December 27, 2030"), //date_local
   target: "Kepler-442 b", //not applicable
-  customers: ["ZTM", "NASA"], //payload.customers for each payload
+  customers: ["ZTM", "NASA"], //payloads.customers for each payload
   upcoming: true, //upcoming
   success: true, //success
 };
@@ -42,7 +42,42 @@ async function loadLaunchesData() {
     },
   });
 
-  // console.log(response.data.docs[0].payloads[0].customers);
+  const launchDocs = response.data.docs;
+  let examplePayload = [
+    {
+      customers: ["NASA (CRS)", "ZTM"],
+      id: "5eb0e4bab6c3bb0006eeb1eb",
+    },
+    {
+      customers: ["Orbcomm", "AGORA"],
+      id: "5eb0e4bab6c3bb0006eeb1ec",
+    },
+  ];
+
+  function getCustomersFromPayLoads(payloads) {
+    let allCustomers = [];
+    for (let payload of payloads) {
+      // console.log(payload.customers);
+      for (let customer of payload.customers) {
+        allCustomers.push(customer);
+      }
+    }
+    return allCustomers;
+  }
+
+  for (const launchDoc of launchDocs) {
+    const launch = {
+      flightNumber: launchDoc["flight_number"],
+      mission: launchDoc["name"],
+      rocket: launchDoc["rocket"]["name"],
+      launchDate: launchDoc["date_local"],
+      upcoming: launchDoc["upcoming"],
+      success: launchDoc["success"],
+      customers: getCustomersFromPayLoads(launchDoc["payloads"]),
+    };
+
+    console.log(launch);
+  }
 }
 
 async function existsLaunchWithId(launchId) {
