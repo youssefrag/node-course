@@ -5,10 +5,9 @@ const { graphqlHTTP } = require("express-graphql");
 
 const { loadFilesSync } = require("@graphql-tools/load-files");
 const { makeExecutableSchema } = require("@graphql-tools/schema");
-const res = require("express/lib/response");
 
 const typesArray = loadFilesSync("**/*", { extensions: ["graphql"] });
-const resolversArray = loadFilesSync("**/*", { extensions: "resolvers.js" });
+const resolversArray = loadFilesSync("**/*", { extensions: ["resolvers.js"] });
 
 const schema = makeExecutableSchema({
   typeDefs: typesArray,
