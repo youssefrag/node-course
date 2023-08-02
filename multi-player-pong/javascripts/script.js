@@ -180,6 +180,9 @@ function startGame() {
     if (paddleX[paddleIndex] > width - paddleWidth) {
       paddleX[paddleIndex] = width - paddleWidth;
     }
+    socket.emit("paddleMove", {
+      xPosition: paddleX[paddleIndex],
+    });
     // Hide Cursor
     canvas.style.cursor = "none";
   });
@@ -197,4 +200,10 @@ socket.on("startGame", (refreeId) => {
 
   isRefree = socket.id === refreeId;
   startGame();
+});
+
+socket.on("paddleMove", (paddleData) => {
+  // Toggle 1 into a 0, and 0 into 1
+  const opponentPaddleIndex = 1 - paddleIndex;
+  paddleX[opponentPaddleIndex] = paddleData.xPosition;
 });
